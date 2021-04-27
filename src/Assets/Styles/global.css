@@ -1,0 +1,11 @@
+:root {
+  --font-family: 'Josefin Sans', sans-serif;
+  --weight-normal: 400;
+  --weight-bold: 700;
+
+  --color-background: #ffffff;
+}
+
+:root[data-theme='dark'] {
+  --color-background: #000000;
+}

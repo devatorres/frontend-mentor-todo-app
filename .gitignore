@@ -1,5 +1,14 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# Frontend Mentor ignores
+*.sketch
+*.fig
+*.xd
+
+# Avoid your project being littered with annoying .DS_Store files!
+.DS_Store
+.prettierignore
+
 # dependencies
 /node_modules
 /.pnp
@@ -9,7 +18,7 @@
 /coverage
 
 # production
-/build
+/archives
 
 # misc
 .DS_Store
