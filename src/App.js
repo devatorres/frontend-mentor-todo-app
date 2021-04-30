@@ -3,11 +3,11 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import Dashboard from './Components/Dashboard';
 
 function App() {
-	const [state, setState] = React.useState('light');
+	const [state, setState] = React.useState(false);
 
 	return (
 		<ThemeProvider theme={createMuiTheme()}>
-			<Dashboard state={state} setState={setState} />
+			<Dashboard darkMode={state} setDarkMode={setState} />
 		</ThemeProvider>
 	);
 }
