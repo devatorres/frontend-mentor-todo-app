@@ -2,10 +2,29 @@
   --font-family: 'Josefin Sans', sans-serif;
   --weight-normal: 400;
   --weight-bold: 700;
+  --space-xl: 4.5rem;
+  --space-bg: 3rem;
+  --space-md: 2rem;
+  --space-sm: 1rem;
+  --radius: 6px;
+  --color-primary: hsl(220, 98%, 61%);
+  --color-check-active: linear-gradient(45deg, #57ddff, #c058f3);
 
-  --color-background: #ffffff;
+  --header-image: url(../Images/bg-desktop-light.jpg);
+  --color-list: #fafafa;
+  --color-check-inactive: #e4e5f1;
+  --color-background: #d2d3db;
+  --color-font-soft: #9394a5;
+  --color-font-dark: #484b6a;
+  --color-line-through: #9394a5;
 }
 
 :root[data-theme='dark'] {
-  --color-background: #000000;
+  --header-image: url(../Images/bg-desktop-dark.jpg);
+  --color-list: #25273c;
+  --color-check-inactive: #383a53;
+  --color-background: #161722;
+  --color-font-soft: #777a92;
+  --color-font-dark: #cacde8;
+  --color-line-through: #383a53;
 }
