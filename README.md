@@ -41,8 +41,8 @@ Users should be able to:
 
 ### Links
 
-- Solution URL: [Add solution URL here](https://github.com/atorres-io/frontend-mentor-todo-app)
-- Live Site URL: [Add live site URL here](https://amazing-jepsen-85b532.netlify.app/)
+- Solution URL: [Solution URL here](https://github.com/atorres-io/frontend-mentor-todo-app)
+- Live Site URL: [Live site URL here](https://amazing-jepsen-85b532.netlify.app/)
 
 ## My process
 
