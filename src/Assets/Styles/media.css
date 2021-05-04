@@ -2,4 +2,22 @@
   .todo img {
     opacity: 1 !important;
   }
+  
+  .filters {
+    position: absolute;
+    bottom: -65px;
+    left: 0;
+    display: flex;
+		flex-flow: row;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		height: 50px;
+		background-color: var(--color-list);
+		border-radius: var(--radius);
+  }
+
+  span.footer {
+    margin-top: calc(var(--space-bg) * 2);
+  }
 }

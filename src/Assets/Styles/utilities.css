@@ -1,3 +1,7 @@
 .ghost {
   background: var(--color-primary);
 }
+
+input[type='radio']:checked + label {
+  color: var(--color-primary) !important;
+}

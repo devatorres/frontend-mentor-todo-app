@@ -40,10 +40,6 @@ const styles = theme => ({
 		borderRadius: 'var(--radius)',
 		marginBottom: 'var(--space-md)',
 
-		'& input[type="checkbox"]': {
-			margin: '0 var(--space-sm)',
-			cursor: 'pointer',
-		},
 		'& input[type="text"]': {
 			height: '50px',
 			appearance: 'none',
@@ -82,10 +78,6 @@ const styles = theme => ({
 			'&:hover img': {
 				opacity: 1,
 			},
-			'& input[type="checkbox"]': {
-				margin: '0 var(--space-sm)',
-				cursor: 'pointer',
-			},
 			'& p': {
 				maxWidth: '80%',
 				flexGrow: 1,
@@ -109,11 +101,58 @@ const styles = theme => ({
 			},
 		},
 	},
+	main2: {
+		'& .footer-mobile': {
+			display: 'none',
+			flexFlow: 'row',
+			justifyContent: 'center',
+			alignItems: 'center',
+			width: '100%',
+			height: '50px',
+			backgroundColor: 'var(--color-list)',
+			borderRadius: 'var(--radius)',
+			marginTop: 'var(--space-sm)',
+		},
+	},
+	footer: {
+		position: 'relative',
+		//display: 'flex',
+		flexFlow: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		width: '100%',
+		height: '50px',
+		padding: '0 var(--space-sm)',
+		backgroundColor: 'var(--color-list)',
+		borderRadius: '0 0 var(--radius) var(--radius)',
+
+		'& .filters input[type="radio"]': {
+			display: 'none',
+		},
+		'& .filters label': {
+			cursor: 'pointer',
+			margin: '0 0.5rem',
+			transition: 'color 250ms ease',
+
+			'&:hover': {
+				color: 'var(--color-font-dark)',
+			},
+		},
+	},
+	clear: {
+		cursor: 'pointer',
+		transition: 'color 250ms ease',
+
+		'&:hover': {
+			color: 'var(--color-font-dark)',
+		},
+	},
 });
 
 function Dashboard(props) {
 	const { classes, darkMode, setDarkMode } = props;
 	const [todos, setTodos] = React.useState([]);
+	const [filter, setFilter] = React.useState('all');
 
 	React.useEffect(() => {
 		initSortable();
@@ -141,7 +180,7 @@ function Dashboard(props) {
 	};
 
 	const handleCheckedState = event => {
-		const uuid = event.target.parentNode.dataset.uuid;
+		const uuid = event.target.parentNode.parentNode.dataset.uuid;
 		const todoToUpdate = [...todos].map(todo => {
 			if (todo.getUuid() === uuid) {
 				todo.setChecked(event.target.checked);
@@ -159,15 +198,53 @@ function Dashboard(props) {
 		updateTodos(todoToDelete);
 	};
 
+	const handleClearCompleted = () => {
+		const todosCompleted = [...todos].filter(todo => !todo.getChecked());
+		setTodos(todosCompleted);
+		updateTodos(todosCompleted);
+	};
+
 	const handleCreateTodo = event => {
 		const IntroKey = 13;
 		if (event.keyCode === IntroKey) {
-			const newTodos = [...todos, new Todo({ content: event.target.value })];
-			event.target.value = ''; //... reset input
-			setTodos(newTodos);
-			addTodo(newTodos);
+			if (event.target.value !== '') {
+				const newTodos = [...todos, new Todo({ content: event.target.value })];
+				event.target.value = ''; //... reset input
+				setTodos(newTodos);
+				addTodo(newTodos);
+			}
 		}
 	};
+
+	const countTodosLeft = () =>
+		[].concat(...todos).filter(todo => !todo.getChecked()).length;
+
+	const render = () => {
+		if (filter === 'active') {
+			const activeTodos = [...todos].filter(todo => !todo.getChecked());
+			return activeTodos.map(todo => todoLayout(todo));
+		} else if (filter === 'completed') {
+			const completedTodos = [...todos].filter(todo => todo.getChecked());
+			return completedTodos.map(todo => todoLayout(todo));
+		} else {
+			return todos.map(todo => todoLayout(todo));
+		}
+	};
+
+	const todoLayout = todo => (
+		<div className='todo' key={todo.getUuid()} data-uuid={todo.getUuid()}>
+			<label className='checkbox'>
+				<input
+					type='checkbox'
+					checked={todo.getChecked()}
+					onChange={handleCheckedState}
+				/>
+				<span className='checkmark'></span>
+			</label>
+			<p className='grabbing'>{todo.getContent()}</p>
+			<img src={Close} onClick={handleDeleteTodo} alt='Close Button' />
+		</div>
+	);
 
 	return (
 		<React.Fragment>
@@ -180,7 +257,10 @@ function Dashboard(props) {
 				/>
 			</div>
 			<div className={classes.header}>
-				<input type='checkbox' onChange={handleAllCheckedState} />
+				<label className='checkbox'>
+					<input type='checkbox' onChange={handleAllCheckedState} />
+					<span className='checkmark'></span>
+				</label>
 				<input
 					type='text'
 					placeholder='Create a new todo...'
@@ -188,19 +268,39 @@ function Dashboard(props) {
 				/>
 			</div>
 			<div className={classes.main} id='todos'>
-				{todos.map(todo => (
-					<div className='todo' key={todo.getUuid()} data-uuid={todo.getUuid()}>
-						<input
-							type='checkbox'
-							checked={todo.getChecked()}
-							onChange={handleCheckedState}
-						/>
-						<p className='grabbing'>{todo.getContent()}</p>
-						<img src={Close} onClick={handleDeleteTodo} alt='Close Button' />
-					</div>
-				))}
+				{render()}
 			</div>
-			<span>Drag and drop to reorder list</span>
+			<div className={classes.main2}>
+				<div
+					className={classes.footer}
+					style={todos.length === 0 ? { display: 'none' } : { display: 'flex' }}
+				>
+					<span>{countTodosLeft() + ' items left'}</span>
+					<div className='filters'>
+						<input type='radio' id='all' name='filter' defaultChecked></input>
+						<label htmlFor='all' onClick={() => setFilter('all')}>
+							All
+						</label>
+						<input type='radio' id='active' name='filter'></input>
+						<label htmlFor='active' onClick={() => setFilter('active')}>
+							Active
+						</label>
+						<input type='radio' id='completed' name='filter'></input>
+						<label htmlFor='completed' onClick={() => setFilter('completed')}>
+							Completed
+						</label>
+					</div>
+					<span className={classes.clear} onClick={handleClearCompleted}>
+						Clear Completed
+					</span>
+				</div>
+			</div>
+			<span
+				className='footer'
+				style={todos.length === 0 ? { marginTop: '10rem' } : {}}
+			>
+				{todos.length < 2 ? '' : 'Drag and drop to reorder list'}
+			</span>
 		</React.Fragment>
 	);
 }
