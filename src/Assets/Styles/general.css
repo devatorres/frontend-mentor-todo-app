@@ -88,7 +88,6 @@ span.footer {
 }
 
 .checkbox:hover input ~ .checkmark {
-  border: 1px solid;
   border-image-slice: 1;
   border-width: 1px;
 	border-image-source: var(--color-check-active);
