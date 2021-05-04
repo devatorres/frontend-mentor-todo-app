@@ -95,10 +95,6 @@ const styles = theme => ({
 					transform: 'scale(1.2)',
 				},
 			},
-			'& input[type="checkbox"]:checked + p': {
-				color: 'var(--color-line-through)',
-				textDecoration: 'line-through',
-			},
 		},
 	},
 	main2: {
@@ -155,9 +151,9 @@ function Dashboard(props) {
 	const [filter, setFilter] = React.useState('all');
 
 	React.useEffect(() => {
-		initSortable();
 		const localData = getTodos();
 		setTodos(localData === null ? [] : localData.map(todo => new Todo(todo)));
+		initSortable();
 	}, []);
 
 	const handleLightMode = () => {
@@ -180,7 +176,7 @@ function Dashboard(props) {
 	};
 
 	const handleCheckedState = event => {
-		const uuid = event.target.parentNode.parentNode.dataset.uuid;
+		const uuid = event.target.parentNode.dataset.uuid;
 		const todoToUpdate = [...todos].map(todo => {
 			if (todo.getUuid() === uuid) {
 				todo.setChecked(event.target.checked);
@@ -233,14 +229,11 @@ function Dashboard(props) {
 
 	const todoLayout = todo => (
 		<div className='todo' key={todo.getUuid()} data-uuid={todo.getUuid()}>
-			<label className='checkbox'>
-				<input
-					type='checkbox'
-					checked={todo.getChecked()}
-					onChange={handleCheckedState}
-				/>
-				<span className='checkmark'></span>
-			</label>
+			<input
+				type='checkbox'
+				checked={todo.getChecked()}
+				onChange={handleCheckedState}
+			/>
 			<p className='grabbing'>{todo.getContent()}</p>
 			<img src={Close} onClick={handleDeleteTodo} alt='Close Button' />
 		</div>
@@ -257,10 +250,7 @@ function Dashboard(props) {
 				/>
 			</div>
 			<div className={classes.header}>
-				<label className='checkbox'>
-					<input type='checkbox' onChange={handleAllCheckedState} />
-					<span className='checkmark'></span>
-				</label>
+				<input type='checkbox' onChange={handleAllCheckedState} />
 				<input
 					type='text'
 					placeholder='Create a new todo...'
