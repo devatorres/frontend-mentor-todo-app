@@ -1,13 +1,14 @@
-import React from 'react';
-import withStyles from '@material-ui/core/styles/withStyles';
-import { getTodos, addTodo, updateTodos } from '../Utils/LocalStorage';
-import { initSortable } from '../Utils/Sortable';
-import Sun from '../Assets/Images/icon-sun.svg';
-import Moon from '../Assets/Images/icon-moon.svg';
-import Close from '../Assets/Images/icon-cross.svg';
-import Todo from '../Models/Todo';
+import React from 'react'
+import withStyles from '@material-ui/core/styles/withStyles'
+import { getTodos, addTodo, updateTodos } from '../Utils/LocalStorage'
+import { initSortable } from '../Utils/Sortable'
+import Sun from '../Assets/Images/icon-sun.svg'
+import Moon from '../Assets/Images/icon-moon.svg'
+import Close from '../Assets/Images/icon-cross.svg'
+import INITIAL_TODOS from '../Constants/Todos'
+import Todo from '../Models/Todo'
 
-const styles = theme => ({
+const styles = (theme) => ({
 	title: {
 		display: 'flex',
 		flexFlow: 'row nowrap',
@@ -22,12 +23,12 @@ const styles = theme => ({
 			transition: 'transform 250ms ease',
 
 			'&:hover': {
-				transform: 'scale(1.2)',
+				transform: 'scale(1.2)'
 			},
 			'&:active': {
-				transform: 'scale(1)',
-			},
-		},
+				transform: 'scale(1)'
+			}
+		}
 	},
 	header: {
 		display: 'flex',
@@ -50,19 +51,19 @@ const styles = theme => ({
 			flexGrow: 1,
 
 			'&:focus': {
-				outline: '0',
+				outline: '0'
 			},
 			'&:placeholder': {
 				color: 'var(--color-font-soft)',
-				fontSize: '0.6rem',
-			},
-		},
+				fontSize: '0.6rem'
+			}
+		}
 	},
 	main: {
 		boxShadow: '0 12px 24px -12px rgb(0 0 0 / 20%)',
 
 		'& .todo:first-child': {
-			borderRadius: 'var(--radius) var(--radius) 0 0',
+			borderRadius: 'var(--radius) var(--radius) 0 0'
 		},
 		'& .todo': {
 			display: 'flex',
@@ -76,12 +77,12 @@ const styles = theme => ({
 			borderBottom: 'solid 1px var(--color-check-inactive)',
 
 			'&:hover img': {
-				opacity: 1,
+				opacity: 1
 			},
 			'& p': {
 				maxWidth: '80%',
 				flexGrow: 1,
-				cursor: 'grabbing',
+				cursor: 'grabbing'
 			},
 			'& img': {
 				width: '16px',
@@ -92,10 +93,10 @@ const styles = theme => ({
 				transition: 'opacity 150ms ease, transform 250ms ease',
 
 				'&:hover': {
-					transform: 'scale(1.2)',
-				},
-			},
-		},
+					transform: 'scale(1.2)'
+				}
+			}
+		}
 	},
 	main2: {
 		'& .footer-mobile': {
@@ -107,8 +108,8 @@ const styles = theme => ({
 			height: '50px',
 			backgroundColor: 'var(--color-list)',
 			borderRadius: 'var(--radius)',
-			marginTop: 'var(--space-sm)',
-		},
+			marginTop: 'var(--space-sm)'
+		}
 	},
 	footer: {
 		position: 'relative',
@@ -123,7 +124,7 @@ const styles = theme => ({
 		borderRadius: '0 0 var(--radius) var(--radius)',
 
 		'& .filters input[type="radio"]': {
-			display: 'none',
+			display: 'none'
 		},
 		'& .filters label': {
 			cursor: 'pointer',
@@ -131,113 +132,117 @@ const styles = theme => ({
 			transition: 'color 250ms ease',
 
 			'&:hover': {
-				color: 'var(--color-font-dark)',
-			},
-		},
+				color: 'var(--color-font-dark)'
+			}
+		}
 	},
 	clear: {
 		cursor: 'pointer',
 		transition: 'color 250ms ease',
 
 		'&:hover': {
-			color: 'var(--color-font-dark)',
-		},
-	},
-});
+			color: 'var(--color-font-dark)'
+		}
+	}
+})
 
 function Dashboard(props) {
-	const { classes, darkMode, setDarkMode } = props;
-	const [todos, setTodos] = React.useState([]);
-	const [filter, setFilter] = React.useState('all');
+	const { classes, darkMode, setDarkMode } = props
+	const [todos, setTodos] = React.useState([])
+	const [filter, setFilter] = React.useState('all')
 
 	React.useEffect(() => {
-		const localData = getTodos();
-		setTodos(localData === null ? [] : localData.map(todo => new Todo(todo)));
-		initSortable();
-	}, []);
+		const localData = getTodos()
+		setTodos(
+			localData === null
+				? [...INITIAL_TODOS]
+				: localData.map((todo) => new Todo(todo))
+		)
+		initSortable()
+	}, [])
 
 	const handleLightMode = () => {
-		setDarkMode(false);
-		document.documentElement.setAttribute('data-theme', 'light');
-	};
+		setDarkMode(false)
+		document.documentElement.setAttribute('data-theme', 'light')
+	}
 
 	const handleDarkMode = () => {
-		setDarkMode(true);
-		document.documentElement.setAttribute('data-theme', 'dark');
-	};
+		setDarkMode(true)
+		document.documentElement.setAttribute('data-theme', 'dark')
+	}
 
-	const handleAllCheckedState = event => {
-		const todosToUpdate = [...todos].map(todo => {
-			todo.setChecked(event.target.checked);
-			return todo;
-		});
-		setTodos(todosToUpdate);
-		updateTodos(todosToUpdate);
-	};
+	const handleAllCheckedState = (event) => {
+		const todosToUpdate = [...todos].map((todo) => {
+			todo.setChecked(event.target.checked)
+			return todo
+		})
+		setTodos(todosToUpdate)
+		updateTodos(todosToUpdate)
+	}
 
-	const handleCheckedState = event => {
-		const uuid = event.target.parentNode.dataset.uuid;
-		const todoToUpdate = [...todos].map(todo => {
+	const handleCheckedState = (event) => {
+		const uuid = event.target.parentNode.dataset.uuid
+		const todoToUpdate = [...todos].map((todo) => {
 			if (todo.getUuid() === uuid) {
-				todo.setChecked(event.target.checked);
+				todo.setChecked(event.target.checked)
 			}
-			return todo;
-		});
-		setTodos(todoToUpdate);
-		updateTodos(todoToUpdate);
-	};
+			return todo
+		})
+		setTodos(todoToUpdate)
+		updateTodos(todoToUpdate)
+	}
 
-	const handleDeleteTodo = event => {
-		const uuid = event.target.parentNode.dataset.uuid;
-		const todoToDelete = [...todos].filter(todo => todo.getUuid() !== uuid);
-		setTodos(todoToDelete);
-		updateTodos(todoToDelete);
-	};
+	const handleDeleteTodo = (event) => {
+		const uuid = event.target.parentNode.dataset.uuid
+		const todoToDelete = [...todos].filter((todo) => todo.getUuid() !== uuid)
+		setTodos(todoToDelete)
+		updateTodos(todoToDelete)
+	}
 
 	const handleClearCompleted = () => {
-		const todosCompleted = [...todos].filter(todo => !todo.getChecked());
-		setTodos(todosCompleted);
-		updateTodos(todosCompleted);
-	};
+		const todosCompleted = [...todos].filter((todo) => !todo.getChecked())
+		setTodos(todosCompleted)
+		updateTodos(todosCompleted)
+	}
 
-	const handleCreateTodo = event => {
-		const IntroKey = 13;
+	const handleCreateTodo = (event) => {
+		const IntroKey = 13
 		if (event.keyCode === IntroKey) {
 			if (event.target.value !== '') {
-				const newTodos = [...todos, new Todo({ content: event.target.value })];
-				event.target.value = ''; //... reset input
-				setTodos(newTodos);
-				addTodo(newTodos);
+				const newTodos = [...todos, new Todo({ content: event.target.value })]
+				event.target.value = '' //... reset input
+				setTodos(newTodos)
+				addTodo(newTodos)
 			}
 		}
-	};
+	}
 
 	const countTodosLeft = () =>
-		[].concat(...todos).filter(todo => !todo.getChecked()).length;
+		[].concat(...todos).filter((todo) => !todo.getChecked()).length
 
 	const render = () => {
 		if (filter === 'active') {
-			const activeTodos = [...todos].filter(todo => !todo.getChecked());
-			return activeTodos.map(todo => todoLayout(todo));
+			const activeTodos = [...todos].filter((todo) => !todo.getChecked())
+			return activeTodos.map((todo) => todoLayout(todo))
 		} else if (filter === 'completed') {
-			const completedTodos = [...todos].filter(todo => todo.getChecked());
-			return completedTodos.map(todo => todoLayout(todo));
+			const completedTodos = [...todos].filter((todo) => todo.getChecked())
+			return completedTodos.map((todo) => todoLayout(todo))
 		} else {
-			return todos.map(todo => todoLayout(todo));
+			return todos.map((todo) => todoLayout(todo))
 		}
-	};
+	}
 
-	const todoLayout = todo => (
-		<div className='todo' key={todo.getUuid()} data-uuid={todo.getUuid()}>
+	const todoLayout = (todo) => (
+		<div className="todo" key={todo.getUuid()} data-uuid={todo.getUuid()}>
 			<input
-				type='checkbox'
+				type="checkbox"
 				checked={todo.getChecked()}
 				onChange={handleCheckedState}
 			/>
-			<p className='grabbing'>{todo.getContent()}</p>
-			<img src={Close} onClick={handleDeleteTodo} alt='Close Button' />
+			<p className="grabbing">{todo.getContent()}</p>
+			<img src={Close} onClick={handleDeleteTodo} alt="Close Button" />
 		</div>
-	);
+	)
 
 	return (
 		<React.Fragment>
@@ -246,37 +251,38 @@ function Dashboard(props) {
 				<img
 					src={darkMode ? Sun : Moon}
 					onClick={darkMode ? handleLightMode : handleDarkMode}
-					alt='Dark Mode Button'
+					alt="Dark Mode Button"
 				/>
 			</div>
 			<div className={classes.header}>
-				<input type='checkbox' onChange={handleAllCheckedState} />
+				<input type="checkbox" onChange={handleAllCheckedState} />
 				<input
-					type='text'
-					placeholder='Create a new todo...'
+					type="text"
+					placeholder="Create a new todo..."
 					onKeyUp={handleCreateTodo}
 				/>
 			</div>
-			<div className={classes.main} id='todos'>
+			<div className={classes.main} id="todos">
 				{render()}
 			</div>
 			<div className={classes.main2}>
 				<div
 					className={classes.footer}
-					style={todos.length === 0 ? { display: 'none' } : { display: 'flex' }}
-				>
+					style={
+						todos.length === 0 ? { display: 'none' } : { display: 'flex' }
+					}>
 					<span>{countTodosLeft() + ' items left'}</span>
-					<div className='filters'>
-						<input type='radio' id='all' name='filter' defaultChecked></input>
-						<label htmlFor='all' onClick={() => setFilter('all')}>
+					<div className="filters">
+						<input type="radio" id="all" name="filter" defaultChecked></input>
+						<label htmlFor="all" onClick={() => setFilter('all')}>
 							All
 						</label>
-						<input type='radio' id='active' name='filter'></input>
-						<label htmlFor='active' onClick={() => setFilter('active')}>
+						<input type="radio" id="active" name="filter"></input>
+						<label htmlFor="active" onClick={() => setFilter('active')}>
 							Active
 						</label>
-						<input type='radio' id='completed' name='filter'></input>
-						<label htmlFor='completed' onClick={() => setFilter('completed')}>
+						<input type="radio" id="completed" name="filter"></input>
+						<label htmlFor="completed" onClick={() => setFilter('completed')}>
 							Completed
 						</label>
 					</div>
@@ -286,13 +292,12 @@ function Dashboard(props) {
 				</div>
 			</div>
 			<span
-				className='footer'
-				style={todos.length === 0 ? { marginTop: '10rem' } : {}}
-			>
+				className="footer"
+				style={todos.length === 0 ? { marginTop: '10rem' } : {}}>
 				{todos.length < 2 ? '' : 'Drag and drop to reorder list'}
 			</span>
 		</React.Fragment>
-	);
+	)
 }
 
-export default withStyles(styles)(Dashboard);
+export default withStyles(styles)(Dashboard)
